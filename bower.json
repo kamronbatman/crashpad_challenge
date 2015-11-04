@@ -1,0 +1,32 @@
+{
+  "name": "crashpad_challenge",
+  "description": "Crashpad Challenge",
+  "main": "server/server.js",
+  "authors": [
+    "Kamron Batman <kamron.batman@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "challenge",
+    "crashpad",
+    "node",
+    "express",
+    "angular"
+  ],
+  "homepage": "https://github.com/kamronbatman/crashpad_challenge",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-google-maps": "~2.2.1",
+    "angular-ui-router": "~0.2.15"
+  }
+}
