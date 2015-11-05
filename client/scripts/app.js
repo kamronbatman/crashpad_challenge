@@ -25,9 +25,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
   app.addEventListener('dom-change', function() {
-    //console.log('Our app is ready to rock!');
-        var drawerPanel = document.querySelector('#paperDrawerPanel');
-    drawerPanel.closeDrawer();
   });
 
   // See https://github.com/Polymer/polymer/issues/1381
@@ -62,10 +59,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   // Close drawer after menu item is selected if drawerPanel is narrow
   app.onDataRouteClick = function() {
-    var drawerPanel = document.querySelector('#paperDrawerPanel');
-    if (drawerPanel.narrow) {
-      drawerPanel.closeDrawer();
-    }
   };
 
   // Scroll page to top and expand header

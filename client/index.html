@@ -43,17 +43,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <span id="browser-sync-binding"></span>
   <template is="dom-bind" id="app">
 
-    <paper-drawer-panel id="paperDrawerPanel">
+    <!-- <paper-drawer-panel id="paperDrawerPanel"> -->
       <!-- Drawer Scroll Header Panel -->
-      <paper-scroll-header-panel drawer fixed>
+      <!-- <paper-scroll-header-panel drawer fixed> -->
 
         <!-- Drawer Toolbar -->
-        <paper-toolbar id="drawerToolbar">
+   <!--      <paper-toolbar id="drawerToolbar">
           <span class="paper-font-title">Menu</span>
-        </paper-toolbar>
+        </paper-toolbar> -->
 
         <!-- Drawer Content -->
-        <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
+ <!--        <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
           <a data-route="home" href="/" on-click="onDataRouteClick">
             <iron-icon icon="home"></iron-icon>
             <span>Home</span>
@@ -61,13 +61,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         </paper-menu>
       </paper-scroll-header-panel>
-
+ -->
       <!-- Main Area -->
       <paper-scroll-header-panel main condenses keep-condensed-header>
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar" class="tall">
-          <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+          <!-- <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button> -->
           <span class="flex"></span>
 
           <!-- Application name -->
@@ -96,7 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </iron-pages>
         </div>
       </paper-scroll-header-panel>
-    </paper-drawer-panel>
+    <!-- </paper-drawer-panel> -->
 
   </template>
 
