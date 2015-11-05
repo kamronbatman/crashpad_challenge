@@ -25,8 +25,13 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.7",
-    "angular-google-maps": "~2.2.1",
-    "angular-ui-router": "~0.2.15"
+    "polymer": "Polymer/polymer#^1.1.0",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "page": "visionmedia/page.js#~1.6.3",
+    "google-map": "GoogleWebComponents/google-map#~1.1.6",
+    "moment": "~2.10.6"
   }
 }

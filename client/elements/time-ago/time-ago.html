@@ -1,0 +1,51 @@
+<dom-module id="time-ago">
+  <template>
+    <span>[[_timeAgo]]</span>
+  </template>
+  <script>
+    Polymer({
+      is: "time-ago",
+      properties: {
+        datetime: {
+          type: String,
+          value: Date.now(),
+          observer: "_dateChanged"
+        },
+        refresh: {
+          type: Boolean,
+          value: true
+        },
+        delay: {
+          type: Number,
+          value: 60000
+        },
+        _interval: {
+          type: Object,
+          value: null
+        },
+        _timeAgo: {
+          type: String,
+          value: ''
+        }
+      },
+      _dateChanged: function() {
+        this.setup();
+      },
+      _setTimeAgo: function() {
+        if (this.refresh) {
+          this._timeAgo = moment(this.datetime).fromNow();
+        } else if (this._interval) { clearInterval(this._interval); }
+      },
+      setup: function () {
+        this._setTimeAgo();
+
+        if (this.refresh) {
+          this._interval = setInterval(this._setTimeAgo.bind(this), this.delay);
+        }
+      },
+      ready: function() {
+        this.setup();
+      }
+    })
+  </script>
+</dom-module>

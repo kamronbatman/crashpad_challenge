@@ -1,0 +1,168 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<!-- Using a modified version of these files. See: https://github.com/GoogleWebComponents/google-map/pull/223 -->
+<link rel="import" href="./google-map.html">
+<link rel="import" href="./google-map-marker.html">
+
+<link rel="import" href="../../bower_components/google-map/google-map-poly.html">
+<link rel="import" href="../../bower_components/google-map/google-map-search.html">
+<link rel="import" href="../../bower_components/google-map/google-map-directions.html">
+
+<script src="../../bower_components/moment/moment.js"></script>
+<link rel="import" href="../time-ago/time-ago.html">
+
+<dom-module id="map-card">
+  <style>
+    :host {
+      display: block;
+      height: 100%;
+    }
+    google-map {
+      height: 600px;
+      width: calc(100% - 16px);
+    }
+    paper-material {
+      border-radius: 2px;
+      height: 100%;
+      padding: 16px 16px 16px 16px;
+      width: calc(98.66% - 16px);
+      margin: 16px auto;
+      background: white;
+    }
+  </style>
+  <template>
+      <iron-ajax
+        id="getLatLng"
+        handle-as="json"
+        on-response="_handleLatLong"
+      >
+      </iron-ajax>
+      <iron-ajax
+        auto
+        url="/api/requests"
+        handle-as="json"
+        on-response="_handleRequests"
+      ></iron-ajax>
+      <div class="container horizontal layout">
+        <div class="flex-3">
+          <google-map id="[[id]]" latitude="[[latitude]]" longitude="[[longitude]]" zoom="[[zoom]]" fit-to-markers single-info-window
+          on-google-map-ready="_whenReady">
+            <template is="dom-repeat" items="{{markersObj}}" as="marker" index-as="markerIndex">
+              <google-map-marker id="[[markerIndex]]" latitude="[[marker.location.latitude]]" longitude="[[marker.location.longitude]]"
+                title="[[marker.description]]" icon="../../images/map-sleep_small.png"
+                click-events on-google-map-marker-open="_markerOpened" on-google-map-marker-close="_markerClosed" radius-meters="[[marker.radiusMeters]]"
+                circle-fill-color="#189d98" circle-fill-opacity="0.33" animation="DROP">
+                  <h3><b>[[marker.name]]</b></h3>
+                  <p><b>Current Location: </b>[[marker.formattedAddress]]</p>
+                  <p><b>Description: </b>{{marker.description}}</p>
+                  <p><b>Radius: </b>[[marker.radius]] [[marker.measurement]]</p>
+              </google-map-marker>
+            </template>
+          </google-map>
+        </div>
+        <div class="flex-1">
+          <template is="dom-if" if="{{selected}}">
+            <paper-material>
+              <h3><b>[[selected.name]] (<time-ago datetime="[[selected.createdAt]]"></time-ago>)</b></h3>
+              <p><b>Current Location: </b>[[selected.formattedAddress]]</p>
+              <p><b>Description: </b>{{selected.description}}</p>
+              <p><b>Radius: </b>[[selected.radius]] [[selected.measurement]]</p>
+            </paper-material>
+          </template>
+          <template is="dom-if" if="{{!selected}}">
+            <template id="markersRepeat" is="dom-repeat" items="{{markersObj}}" as="marker" index-as="markerIndex">
+                <paper-material>
+                  <h3><b>[[marker.name]] (<time-ago datetime="[[marker.createdAt]]"></time-ago>)</b></h3>
+                  <p><b>Current Location: </b>[[marker.formattedAddress]]</p>
+                  <p><b>Description: </b>{{marker.description}}</p>
+                  <p><b>Radius: </b>[[marker.radius]] [[marker.measurement]]</p>
+                </paper-material>
+            </template>
+          </template>
+        </div>
+      <div>
+  </template>
+  <script>
+    Polymer({
+      is: "map-card",
+      properties: {
+        markers: {
+          type: Array,
+          value: []
+        },
+        markersObj: {
+          type: Array,
+          value: []
+        },
+        zoom: {
+          type: Number
+        },
+        selected: {
+          type: Object,
+          value: null
+        }
+      },
+      _whenReady: function(e, detail, sender) {
+        console.log(e,detail,sender);
+        google.maps.event.trigger(e.path[0].map, 'resize');
+      },
+      _markerOpened: function(e, detail, sender) {
+        // This is our marker
+        var marker = e.path[0];
+        this.selected = this.markersObj[marker.id];
+        marker.accuracy = marker.radiusMeters;
+      },
+      _markerClosed: function(e, detail, sender) {
+        // This is our marker
+        var marker = e.path[0];
+        // If we are closing and not switching, then remove the entry
+        if (this.selected === this.markersObj[marker.id]) { this.selected = null; }
+        marker.accuracy = 0;
+      },
+      _lessThanFour: function(index) {
+        return index < 4;
+      },
+      _handleLatLong: function(response) {
+        var results = response.detail.__data__.response.results;
+        if (results.length) {
+          var requestUrl = response.detail.url.toLowerCase();
+
+          this.markers.some(function(marker) {
+            if (marker.requestUrl.toLowerCase() === requestUrl) {
+              marker.formattedAddress = results[0].formatted_address;
+
+              if (this.markersObj.indexOf(marker) === -1) {
+                this.push('markersObj', marker);
+              }
+              return true;
+            }
+
+            return false;
+          }.bind(this));
+
+          // We don't have direct access to $ because this.$ is our iron-ajax
+          this.querySelector('#markersRepeat').render();
+        }
+      },
+      _handleRequests: function(response) {
+        this.makersObj = [];
+        this.markers = response.detail.__data__.response.results;
+
+        // Sort chronologically!
+        this.markers.sort(function(a,b){ return Date.parse(a.createdAt) > Date.parse(b.createdAt); });
+
+        this.markers.forEach(function(marker, index) {
+          marker.radiusMeters = marker.radius * 1609.34; // Convert from miles to meters
+          marker.measurement = 'mile' + (marker.radius != 1 ? 's' : '');
+          marker.requestUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + marker.location.latitude + "," + marker.location.longitude;
+          setTimeout(function(){
+              //this.push('markersObj', marker);
+              this.$.getLatLng.url = marker.requestUrl;
+              this.$.getLatLng.generateRequest();
+            }.bind(this), 500 * index);
+        }.bind(this));
+      }
+    })
+  </script>
+</dom-module>

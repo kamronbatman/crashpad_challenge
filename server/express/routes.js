@@ -1,16 +1,13 @@
 var path = require('path');
 
-var routes = function(app, express) {
-  // Serving static client files
-  var loc = process.isProd() ? 'public' : 'test';
+module.exports = function(app, express) {
+  app.use(express.static(path.join(__dirname, '../../client')));
+  app.use('/bower_components', express.static(path.join(__dirname, '../../bower_components')));
 
-  app.use(express.static(path.join(__dirname, '../../', loc)));
-  app.use('/audio', express.static(path.join(__dirname, '../../audio')));
+  var router = express.Router();
 
-  //var router = require('./api')(app, express.Router());
+  require('./api')(app, router);
 
   // api routes (/api/*)
-  //app.use('/api', router);
+  app.use('/api', router);
 };
-
-module.exports = routes;
