@@ -1,0 +1,37 @@
+{
+  "name": "crashpad_challenge",
+  "description": "Crashpad Challenge",
+  "main": "server/server.js",
+  "authors": [
+    "Kamron Batman <kamron.batman@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "challenge",
+    "crashpad",
+    "node",
+    "express",
+    "angular"
+  ],
+  "homepage": "https://github.com/kamronbatman/crashpad_challenge",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "page": "visionmedia/page.js#~1.6.3",
+    "google-map": "GoogleWebComponents/google-map#~1.1.6",
+    "moment": "~2.10.6"
+  }
+}
